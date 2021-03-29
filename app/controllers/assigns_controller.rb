@@ -18,6 +18,22 @@ class AssignsController < ApplicationController
   end
 
   def update
+    team = Team.friendly.find(params[:team_id])
+
+    if current_user.id == team.owner_id
+      assign_id = params[:id]
+      assign = Assign.find(params[:id])
+      team.owner_id = assign.user_id
+      if team.save
+        user = User.find(assign.user_id)
+        AssignMailer.update_mail(user.email, team.name).deliver
+        redirect_to team_url(team), notice: 'update success'
+      else
+        redirect_to team_url(team), notice: 'update miss'
+      end
+    else
+      redirect_to team_url(team), notice: 'you can\'t grant owner'
+    end
   end
 
 
