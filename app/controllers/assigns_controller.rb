@@ -14,6 +14,13 @@ class AssignsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+  end
+
+
   def destroy
     assign = Assign.find(params[:id])
     destroy_message = assign_destroy(assign, assign.user)
