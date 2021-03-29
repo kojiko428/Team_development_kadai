@@ -12,4 +12,10 @@ class AssignMailer < ApplicationMailer
     @name = name
     mail to: @email, subject: 'オーナー権限が付与されました。'
   end
+
+  def del_agenda_mail(email, title)
+    @email = email
+    @title = title
+    mail to: @email, subject: 'Agendaが削除されました。'
+  end
 end
