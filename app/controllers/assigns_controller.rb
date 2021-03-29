@@ -17,7 +17,6 @@ class AssignsController < ApplicationController
   def destroy
     assign = Assign.find(params[:id])
     destroy_message = assign_destroy(assign, assign.user)
-
     redirect_to team_url(params[:team_id]), notice: destroy_message
   end
 
@@ -31,9 +30,13 @@ class AssignsController < ApplicationController
       I18n.t('views.messages.cannot_delete_the_leader')
     elsif Assign.where(user_id: assigned_user.id).count == 1
       I18n.t('views.messages.cannot_delete_only_a_member')
-    elsif assign.destroy
-      set_next_team(assign, assigned_user)
-      I18n.t('views.messages.delete_member')
+    # 追加 issue1 'チームのリーダーか、ユーザー自身でない場合、削除できません。'
+    elsif current_user != assign.team.owner && current_user != assign.user
+      I18n.t('views.messages.cannot_delete_member_99_some_reason')
+    # redirect_to team_url(params[:team_id])
+    # elsif assign.destroy
+    # set_next_team(assign, assigned_user)
+    # I18n.t('views.messages.delete_member')
     else
       I18n.t('views.messages.cannot_delete_member_4_some_reason')
     end
